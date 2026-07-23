@@ -1,0 +1,38 @@
+services:
+  swanwatch:
+    build: .
+    container_name: swanwatch
+    restart: unless-stopped
+    environment:
+      APP_NAME: SwanWatch
+      STRONGSWAN_CONTAINER: strongswan
+      VPN_HOST: vpn.example.com
+      DASHBOARD_USER: admin
+      DASHBOARD_PASSWORD: change-this-password
+      FLASK_SECRET_KEY: replace-with-a-long-random-string
+      # Optional base32 secret. Generate with: python3 scripts/generate_totp.py
+      TOTP_SECRET: ""
+      # Optional ntfy topic URL, e.g. https://ntfy.sh/my-private-topic
+      NTFY_URL: ""
+      ALERT_EVENTS: connect,disconnect,failed-login,service
+      # Comma-separated Docker containers that may be viewed/restarted.
+      MANAGED_CONTAINERS: plex
+      PLEX_HOST: host.docker.internal
+      PLEX_PORT: 32400
+      DB_PATH: /data/swanwatch.db
+      BACKUP_DIR: /data/backups
+      CONFIG_ROOT: /config-source
+      MANAGED_USERS_FILE: /managed-users/dashboard-users.conf
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc:/host/proc:ro
+      - /:/host/root:ro
+      - ../:/config-source:ro
+      - swanwatch-data:/data
+      - ./managed-users:/managed-users
+    ports:
+      - 192.168.0.70:8085:8085
+volumes:
+  swanwatch-data:

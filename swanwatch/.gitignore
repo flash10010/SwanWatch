@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.env
+*.db
+backups/
+managed-users/*.tmp
+.DS_Store
