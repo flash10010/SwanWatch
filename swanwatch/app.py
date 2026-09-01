@@ -82,9 +82,9 @@ def auth(fn):
     def w(*a,**k):
         if not session.get('authenticated'):
             if request.path.startswith('/api/'):
-                return jsonify({'error': 'Authentication required'}), 401
+                return jsonify({'error':'Authentication required'}), 401
             return redirect(url_for('login'))
-        return fn(*a, **k)
+        return fn(*a,**k)
     return w
 
 def token():
